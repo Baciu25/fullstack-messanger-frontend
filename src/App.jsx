@@ -40,7 +40,7 @@ function App() {
       username: usernameInput,
     };
 
-    fetch("http://localhost:2510/messages", {
+    fetch(`${import.meta.env.VITE_MESSAGING_API}/messages`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
