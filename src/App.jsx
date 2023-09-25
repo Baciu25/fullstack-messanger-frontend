@@ -120,53 +120,90 @@ function App() {
   };
 
   return (
-    <>
-      {error && <h2> {error} </h2>}
-      <h1>editingId: {editingId ? editingId : "null"}</h1>
+    <div className="bg-gray-100 min-h-screen p-4">
+      {error && <h2 className="text-red-500"> {error} </h2>}
+      <h1 className="text-xl mb-4">
+        Editing ID: {editingId ? editingId : "null"}
+      </h1>
 
-      {messages
-        .sort((a, b) => a.created_at - b.created_at)
-        .map((message) => {
-          return (
-            <div key={message.id}>
-              {message.username}:{" "}
-              {editingId === message.id ? (
-                <input
-                  value={temporaryEditingContent}
-                  onChange={(e) => setTemporaryEditingContent(e.target.value)}
-                  name="content"
-                  type="text"
-                />
-              ) : (
-                message.content
-              )}
-              {new Date(message.created_at).toString()}
-              <button onClick={() => handleDelete(message.id)}>
-                Delete 🚮
-              </button>
-              <button onClick={() => startOrFinishEditing(message.id)}>
-                Update
-              </button>
-            </div>
-          );
-        })}
+      <div className="space-y-4">
+        {messages
+          .sort((a, b) => a.created_at - b.created_at)
+          .map((message) => {
+            return (
+              <div
+                key={message.id}
+                className={`${
+                  editingId === message.id
+                    ? "bg-white"
+                    : "bg-blue-500 text-white"
+                } p-4 rounded-lg`}
+              >
+                <div className="flex justify-between items-center">
+                  <span className="font-bold">{message.username}:</span>
+                  <span className="text-sm">
+                    {new Date(message.created_at).toLocaleString()}
+                  </span>
+                </div>
+                {editingId === message.id ? (
+                  <input
+                    value={temporaryEditingContent}
+                    onChange={(e) => setTemporaryEditingContent(e.target.value)}
+                    name="content"
+                    type="text"
+                    className="w-full bg-gray-100 border rounded p-1 mt-2"
+                  />
+                ) : (
+                  <p className="mt-2">{message.content}</p>
+                )}
+                <div className="flex justify-end mt-2 space-x-2">
+                  <button
+                    onClick={() => handleDelete(message.id)}
+                    className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                  >
+                    Delete 🚮
+                  </button>
+                  <button
+                    onClick={() => startOrFinishEditing(message.id)}
+                    className={`${
+                      editingId === message.id ? "bg-green-500" : "bg-blue-500"
+                    } text-white px-2 py-1 rounded hover:bg-opacity-80`}
+                  >
+                    {editingId === message.id ? "Save" : "Edit"}
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+      </div>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          value={usernameInput}
-          onChange={(e) => setUsernameInput(e.target.value)}
-          name="username"
-          type="text"
-        />
-        <input
-          value={contentInput}
-          onChange={(e) => setContentInput(e.target.value)}
-          name="content"
-          type="text"
-        />
-        <button type="submit">Submit</button>
+      <form className="mt-4" onSubmit={handleSubmit}>
+        <div className="flex space-x-2">
+          <input
+            value={usernameInput}
+            onChange={(e) => setUsernameInput(e.target.value)}
+            name="username"
+            type="text"
+            placeholder="Username"
+            className="w-1/4 bg-gray-100 border rounded p-1"
+          />
+          <input
+            value={contentInput}
+            onChange={(e) => setContentInput(e.target.value)}
+            name="content"
+            type="text"
+            placeholder="Message"
+            className="w-3/4 bg-gray-100 border rounded p-1"
+          />
+          <button
+            type="submit"
+            className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
+          >
+            Send
+          </button>
+        </div>
       </form>
-    </>
+    </div>
   );
 }
 
